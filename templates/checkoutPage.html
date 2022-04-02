@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idea Lab</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+{% block content %}
+<body>
+    
+    <div class="mainscreen">
+          <div class="card">
+            <div class="leftside">
+              <a href="/login"><img
+                src="../static/download.webp"
+                class="product"
+                alt="idealab"
+              /></a>
+            </div>
+            <div class="rightside">
+              <form action="/log"  method="post">
+                <h1>Idea Lab</h1>
+                <h2>Logging Details</h2>
+                <p>Name</p>
+                <input type="text" class="inputbox" name="name" required placeholder="Seperate multiple names with ," />
+                <p>USN</p>
+                <input type="text" class="inputbox" name="USN" id="USN" required />
+    
+                <p>Purpose</p>
+                <select class="inputbox" name="purpose" id="purpose" required>
+                  <option value="">--Select--</option>
+                  <option value="laser machine">Laser machine</option>
+                  <option value="3d printing machine">3d printing machine</option>
+                  <option value="lab tools">Lab Tools</option>
+                </select>
+            <div class="expcvv">
+    
+                <p class="expcvv_text">CheckIn</p>
+                <input type="time" class="inputbox" name="checkin" id="checkin" required />
+    
+                <p class="expcvv_text2">CheckOut</p>
+                <input type="time" class="inputbox" name="checkout" id="checkout" required />
+            </div>
+
+                <button type="submit" class="button">Save</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      
+    
+</body>
+{% endblock %}
+</html>
