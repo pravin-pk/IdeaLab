@@ -6,11 +6,11 @@ import pandas as pd
 app = Flask(__name__)
 
 # app.config["SERVER_NAME"]  = "localhost:8888"
-webbrowser.open('http://127.0.0.1:5000/')
+# webbrowser.open('http://127.0.0.1:5000/')
 
 @app.route("/")
 def homepage():
-    return "<a href='/log'>LOGGING</a> <br> <a href='booking'>BOOKING</a>"
+    return render_template("frontPage.html")
 
 @app.route("/log", methods = ["POST", "GET"])
 def checkOut():
@@ -164,4 +164,4 @@ def booking():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

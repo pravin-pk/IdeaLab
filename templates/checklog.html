@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>log details</title>
     <!-- <link rel="stylesheet" href="../static/index.css"> -->
 </head>
 <style>
@@ -88,9 +89,9 @@
         <input type="date" name="start" />
         <input type="date" name="end"/>
         <button type="submit">search</button>
-        <a href="static/log.xlsx" download><button type="button">download</button></a>
-    </div>
     </form>
+        <a class="btn btn-light" href="static/log.xlsx" download>Download</a>
+    </div>
 {% block content %}
     <table id="customers">
         <tr>
