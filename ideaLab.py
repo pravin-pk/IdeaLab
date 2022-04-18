@@ -161,7 +161,24 @@ def booking():
         cur.close()
         return redirect("/log", 404)
     
+@app.route("/showBookings", methods = ['GET', 'POST'])
+def showBookings():
+    if request.method == "GET":
+        try:
+            conn = sqlite3.connect("idealabSlot.sqlite")
+            cur = conn.cursor()
 
+            cur.execute("SELECT * FROM BOOK_SLOT;")
+            data = cur.fetchall()
+            cur.close()
+
+            toExcel(data)
+
+            return render_template("showBookings.html", content=data)
+        except sqlite3.Error as e:
+            cur.close()
+            print(e)
+            return redirect(url_for("homepage"))
 
 if __name__ == "__main__":
     app.run(debug=True)
