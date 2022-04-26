@@ -1,9 +1,10 @@
 import webbrowser
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import pandas as pd
 
 app = Flask(__name__)
+app.secret_key = 'ideaLab'
 
 # app.config["SERVER_NAME"]  = "localhost:8888"
 # webbrowser.open('http://127.0.0.1:5000/')
@@ -52,12 +53,12 @@ def login():
 
     user = request.form["Username"]
     if user in ["MechHOD", "pk", "yathishSir"]:
-        return redirect(url_for("check", usr = user))
+        return redirect(url_for("check"))
     else:
         return redirect(url_for("checkOut"))
 
-@app.route("/<usr>", methods = ['POST', 'GET'])
-def check(usr):
+@app.route("/logs", methods = ['POST', 'GET'])
+def check():
     if request.method == "GET":
         try:
             conn = sqlite3.connect("idealabLog.sqlite")
@@ -150,7 +151,8 @@ def booking():
 
             conn.commit()
             cur.close()
-            return "<script> alert('Slot Booked'); document.location = '/booking'; </script>"
+            # return "<script> alert('Slot Booked'); document.location = '/booking'; </script>"
+            return redirect(url_for("payment", price = request.form.get("price")))
 
         else:
             cur.close()
@@ -179,6 +181,12 @@ def showBookings():
             cur.close()
             print(e)
             return redirect(url_for("homepage"))
+
+@app.route("/payment", methods = ['GET', 'POST'])
+def payment():    
+    price = request.args.get("price")
+    print(price)
+    return render_template("payment.html", content = price)
 
 if __name__ == "__main__":
     app.run(debug=True)
