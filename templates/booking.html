@@ -5,7 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idea Lab</title>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/swup/2.0.14/swup.min.js" integrity="sha512-/CTMe2SxxAmQ66WTDgHBoGz9/YerivYJdgSv5zzPW5l+tqq0CfdMlVDiga4NA9lkh7gXbouMwAbAcoGQ/KKz+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="../static/bookStyle.css">
+    <script defer>
+      const swap = new Swap();
+    </script>
 </head>
 <style>
 
@@ -30,6 +34,7 @@
 
 {% block content %}
 <body>
+  <main id="swup" class="transition-fade">
     <div class="mainscreen">
       <br>
           <div class="card">
@@ -69,16 +74,17 @@
                 <input type="datetime-local" class="inputbox" name="endDT" id="endDT" onblur="Calculate();"  required />
             </div>
 
-                <button type="submit" class="button">Save</button>
-                <br>
-                <p>Price:</p>
-                <input type="text" class="inputbox" name="price" id="price" readonly style="background: transparent; border: none; color: 'white'" />
+            <p>Price:</p>
+            <input type="text" class="inputbox" name="price" id="price" readonly style="background: transparent; border: none; color: 'white'" />
+            <br>
+
+                <button type="submit" class="button">Checkout</button>
               </form>
             </div>
           </div>
 <!-- database list -->
           <br><br><br>
-          <h1 style="text-align: center;">Booking list</h1>
+          <h1 style="text-align: center;">Booked Details</h1>
           <br>
           <div class="card">
             <table id="customers">
@@ -108,7 +114,8 @@
         
 
 
-    
+    </main>
+    {% endblock %}
+
 </body>
-{% endblock %}
 </html>

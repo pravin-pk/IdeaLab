@@ -1,10 +1,13 @@
-import webbrowser
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import pandas as pd
+import stripe
 
 app = Flask(__name__)
 app.secret_key = 'ideaLab'
+
+# stripe.api_key = 'sk_test_51Kt9XkSI3vcYtsdqzfG2gQzHfCNESxyqd7xfuVGHwYpSLK40d4xHyBoI6rJFqWyEwSAiEnUau9QlVJOVqd3JWaET008RbgAAKP'
+
 
 # app.config["SERVER_NAME"]  = "localhost:8888"
 # webbrowser.open('http://127.0.0.1:5000/')
@@ -124,36 +127,46 @@ def booking():
             return redirect(url_for("log"))
 
     try:
+        if request.form["endDT"] < request.form["startDT"]:
+            return "<script> alert('Invalid time'); document.location = '/booking'; </script>"
+
+
         conn = sqlite3.connect("idealabSlot.sqlite")
         cur = conn.cursor()
 
-        cur.execute("CREATE TABLE IF NOT EXISTS BOOK_SLOT (NAME TEXT, USN TEXT, PURPOSE TEXT, START DATETIME, END DATETIME, ENTRYDATE DATE)")
+        cur.execute("CREATE TABLE IF NOT EXISTS BOOK_SLOT (NAME TEXT, USN TEXT, PURPOSE TEXT, START DATETIME, END DATETIME, ENTRYDATE DATETIME)")
 
         cur.execute("SELECT MAX(END), MAX(START) FROM BOOK_SLOT WHERE PURPOSE = ?", (request.form["purpose"],))
         date = cur.fetchall()
 
         if date[0][0] is None:
-            date = cur.execute("SELECT DATETIME();").fetchall()
+            date = cur.execute("SELECT DATETIME('now', 'localtime');").fetchall()
 
-        if request.form["startDT"] > date[0][0] or request.form["endDT"] < date[0][1]:
+        startDate = request.form["startDT"].split('T')
+        endDate = request.form["endDT"].split('T')
+        startDate = f"{startDate[0]} {startDate[1]}"
+        endDate = f"{endDate[0]} {endDate[1]}"
+
+        if startDate > date[0][0] or endDate < date[0][1]:
+
 
             cur.execute(
-                "INSERT INTO BOOK_SLOT VALUES (? ,?, ?, ?, ?, date())",
+                "INSERT INTO BOOK_SLOT VALUES (? ,?, ?, ?, ?, datetime('now', 'localtime'))",
                 (
                     request.form["name"],
                     request.form["USN"],
                     request.form["purpose"],
-                    request.form["startDT"],
-                    request.form["endDT"],
+                    startDate,
+                    endDate,
                     # "%s-%s-%s" % (now.year, now.month, now.day),
                 ),
             )
 
             conn.commit()
             cur.close()
-            # return "<script> alert('Slot Booked'); document.location = '/booking'; </script>"
-            return redirect(url_for("payment", price = request.form.get("price")))
-
+            # return render_template("booking.html", modal = {'text':'Slot booked'})
+            # return redirect(url_for("payment", price = request.form.get("price")))
+            return redirect(url_for("booking"))
         else:
             cur.close()
             return "<script> alert('Selected Time is booked already, Chose some other date and time'); document.location = '/booking'; </script>"
@@ -187,6 +200,33 @@ def payment():
     price = request.args.get("price")
     print(price)
     return render_template("payment.html", content = price)
+
+
+# ------------TRYING PAYMENT-----------------
+# @app.route('/create-checkout-session', methods=['POST', 'GET'])
+# def create_checkout_session():
+#     try:
+#         checkout_session = stripe.checkout.Session.create(
+#             line_items=[
+#                 {
+#                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+#                     'price': 'price_1KtCZjSI3vcYtsdq9aU1LDde',
+#                     'quantity': 1,
+#                 },
+#             ],
+#             mode='payment',
+#             success_url='/success.html',
+#             cancel_url='/cancel.html',
+#         )
+#     except Exception as e:
+#         return str(e)
+
+#     return redirect(checkout_session.url, code=303)
+
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

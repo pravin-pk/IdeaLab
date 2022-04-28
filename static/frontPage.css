@@ -1,6 +1,6 @@
 body {
     background-color: #a3a4a4;
-    /* background-image: url("99868.jpg"); */
+    background-image: url("https://wallpaperaccess.com/full/3063067.png");
     font-family: 'Open Sans', sans-serif;
   }
   
@@ -9,7 +9,7 @@ body {
     height: 300px;
     width: 600px;
     top: 200px;
-    left: calc(50% - 170px);
+    left: calc(50% - 180px);
     display: flex;
   }
   
@@ -17,7 +17,7 @@ body {
     display: flex;
     height: 280px;
     width: 200px;
-    background-color: #17141d;
+    background-color: #1d141b;
     border-radius: 10px;
     box-shadow: -1rem 0 3rem #000;
   /*   margin-left: -50px; */
@@ -58,7 +58,7 @@ body {
   }
   
   .emptybar {
-    background-color: #2e3033;
+    background-color: #2e332f;
     width: 100%;
     height: 100%;
   }
@@ -100,4 +100,21 @@ body {
   .card:hover .stroke {
     stroke-dashoffset: 100;
     transition: 0.6s ease-out;
+  }
+
+  .transition-fade {
+    transition: 500ms;
+    opacity: 1;
+    transform: translateX(0);
+    transform-origin: left;
+  }
+  
+  html.is-animating .transition-fade {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+
+  html.is-leaving .transition-fade {
+      opacity: 0;
+      transform: translateX(0);
   }
