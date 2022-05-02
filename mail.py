@@ -24,13 +24,13 @@ class successMail:
             <br>
             <p><b>Thank You</b></p></h3>
             <br>
-            <h4>Regards</h4>
-            <h4>IdeaLab Sjec</h4>
+            <p>Regards</p>
+            <p>IdeaLab Sjec</p>
         '''
 
         message = MIMEMultipart("alternative")
         message['From'] = self.sender_address
-        message['Subject'] = "Hello world"
+        message['Subject'] = "Slot Booked"
         message.attach(MIMEText(mail_content_html, 'html'))
 
         try:

@@ -1,6 +1,7 @@
 body {
-    font-family: 'Roboto', sans-serif!important;
-	margin:0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-family: 'Orbitron', sans-serif;
+    margin:0;
 	padding:0;
 	box-sizing: border-box;
 }
