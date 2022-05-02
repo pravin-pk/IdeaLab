@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idea Lab</title>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/swup/2.0.14/swup.min.js" integrity="sha512-/CTMe2SxxAmQ66WTDgHBoGz9/YerivYJdgSv5zzPW5l+tqq0CfdMlVDiga4NA9lkh7gXbouMwAbAcoGQ/KKz+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="../static/bookStyle.css">
     <script defer>
@@ -74,11 +75,14 @@
                 <input type="datetime-local" class="inputbox" name="endDT" id="endDT" onblur="Calculate();"  required />
             </div>
 
+            <p>Email</p>
+                <input type="email" class="inputbox" name="emailId" id="emailId" required placeholder="Enter your Email Address" />
+
             <p>Price:</p>
             <input type="text" class="inputbox" name="price" id="price" readonly style="background: transparent; border: none; color: 'white'" />
             <br>
 
-                <button type="submit" class="button">Checkout</button>
+                <button type="submit" class="button" data-toggle="modal" data-target="#exampleModal">Checkout</button>
               </form>
             </div>
           </div>
@@ -115,7 +119,10 @@
 
 
     </main>
+
     {% endblock %}
+    
+<!-- <div class="loader"></div> -->
 
 </body>
 </html>

@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, make_response
 import sqlite3
 import pandas as pd
 import stripe
+from mail import successMail
 
 app = Flask(__name__)
+
 app.secret_key = 'ideaLab'
 
 # stripe.api_key = 'sk_test_51Kt9XkSI3vcYtsdqzfG2gQzHfCNESxyqd7xfuVGHwYpSLK40d4xHyBoI6rJFqWyEwSAiEnUau9QlVJOVqd3JWaET008RbgAAKP'
@@ -116,7 +118,9 @@ def booking():
             conn = sqlite3.connect("idealabSlot.sqlite")
             cur = conn.cursor()
 
-            cur.execute("SELECT NAME, PURPOSE, START, END FROM BOOK_SLOT WHERE START > DATETIME('now', 'localtime') ORDER BY END;")
+            cur.execute("CREATE TABLE IF NOT EXISTS BOOK_SLOT (NAME TEXT, USN TEXT, PURPOSE TEXT, START DATETIME, END DATETIME, ENTRYDATE DATETIME)")
+
+            cur.execute("SELECT NAME, PURPOSE, START, END FROM BOOK_SLOT WHERE END > DATETIME('now', 'localtime') ORDER BY END;")
             data = cur.fetchall()
             cur.close()
 
@@ -124,7 +128,7 @@ def booking():
         except sqlite3.Error as e:
             cur.close()
             print(e)
-            return redirect(url_for("log"))
+            return redirect(url_for("homepage"))
 
     try:
         if request.form["endDT"] < request.form["startDT"]:
@@ -147,15 +151,17 @@ def booking():
         startDate = f"{startDate[0]} {startDate[1]}"
         endDate = f"{endDate[0]} {endDate[1]}"
 
-        if startDate > date[0][0] or endDate < date[0][1]:
-
+        if startDate >= date[0][0]:
+            name = request.form["name"]
+            usn = request.form["USN"]
+            purpose = request.form["purpose"]
 
             cur.execute(
                 "INSERT INTO BOOK_SLOT VALUES (? ,?, ?, ?, ?, datetime('now', 'localtime'))",
                 (
-                    request.form["name"],
-                    request.form["USN"],
-                    request.form["purpose"],
+                    name,
+                    usn,
+                    purpose,
                     startDate,
                     endDate,
                     # "%s-%s-%s" % (now.year, now.month, now.day),
@@ -164,9 +170,13 @@ def booking():
 
             conn.commit()
             cur.close()
-            # return render_template("booking.html", modal = {'text':'Slot booked'})
+            # return render_template("booking.html", modal = {'text':'Slot booked'}), 201
             # return redirect(url_for("payment", price = request.form.get("price")))
-            return redirect(url_for("booking"))
+
+            sendMail = successMail()
+            sendMail.addRecipent(request.form["emailId"])
+            sendMail.sendMail(name, usn, purpose, startDate, endDate)
+            return "<script> alert('Slot booked, Check mail for more details'); document.location = '/booking'; </script>"
         else:
             cur.close()
             return "<script> alert('Selected Time is booked already, Chose some other date and time'); document.location = '/booking'; </script>"
