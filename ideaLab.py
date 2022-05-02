@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, make_response
 import sqlite3
 import pandas as pd
-import stripe
 from mail import successMail
 
 app = Flask(__name__)
