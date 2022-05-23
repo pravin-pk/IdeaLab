@@ -2,10 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, session, m
 import sqlite3
 import pandas as pd
 from mail import successMail
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
 app.secret_key = 'ideaLab'
+
+app.config['UPLOAD_FOLDER'] = "E:/Web_Development/IdeaLab/files"
 
 # stripe.api_key = 'sk_test_51Kt9XkSI3vcYtsdqzfG2gQzHfCNESxyqd7xfuVGHwYpSLK40d4xHyBoI6rJFqWyEwSAiEnUau9QlVJOVqd3JWaET008RbgAAKP'
 
@@ -101,7 +105,7 @@ def toExcel(data):
     # print(data)
     try:
         df = pd.DataFrame(data)
-        df.columns = ['Name', 'USN', 'Purpose', 'CheckInTime', 'CheckOutTime', 'Date']
+        # df.columns = ['Name', 'USN', 'Purpose', 'CheckInTime', 'CheckOutTime', 'Date']
         # print(df)
         # df.to_csv('log.csv', index=False)
         df.to_excel('static/log.xlsx', index=False)
@@ -137,9 +141,9 @@ def booking():
         conn = sqlite3.connect("idealabSlot.sqlite")
         cur = conn.cursor()
 
-        cur.execute("CREATE TABLE IF NOT EXISTS BOOK_SLOT (NAME TEXT, USN TEXT, PURPOSE TEXT, START DATETIME, END DATETIME, ENTRYDATE DATETIME)")
+        cur.execute("CREATE TABLE IF NOT EXISTS BOOK_SLOT (NAME TEXT, USN TEXT,ORGANIZATION TEXT, MACHINE TEXT, PURPOSE TEXT, START DATETIME, END DATETIME, FILENAME TEXT, ENTRYDATE DATETIME)")
 
-        cur.execute("SELECT MAX(END), MAX(START) FROM BOOK_SLOT WHERE PURPOSE = ?", (request.form["purpose"],))
+        cur.execute("SELECT MAX(END), MAX(START) FROM BOOK_SLOT WHERE MACHINE = ?", (request.form["machine"],))
         date = cur.fetchall()
 
         if date[0][0] is None:
@@ -150,19 +154,26 @@ def booking():
         startDate = f"{startDate[0]} {startDate[1]}"
         endDate = f"{endDate[0]} {endDate[1]}"
 
+        file = request.files['file']
+
         if startDate >= date[0][0]:
             name = request.form["name"]
             usn = request.form["USN"]
+            organization = request.form["organization"]
+            machine = request.form["machine"]
             purpose = request.form["purpose"]
 
             cur.execute(
-                "INSERT INTO BOOK_SLOT VALUES (? ,?, ?, ?, ?, datetime('now', 'localtime'))",
+                "INSERT INTO BOOK_SLOT VALUES (? ,?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))",
                 (
                     name,
                     usn,
+                    organization,
+                    machine,
                     purpose,
                     startDate,
                     endDate,
+                    file.filename,
                     # "%s-%s-%s" % (now.year, now.month, now.day),
                 ),
             )
@@ -171,6 +182,10 @@ def booking():
             cur.close()
             # return render_template("booking.html", modal = {'text':'Slot booked'}), 201
             # return redirect(url_for("payment", price = request.form.get("price")))
+
+            if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], usn+"_"+filename))
 
             sendMail = successMail()
             sendMail.addRecipent(request.form["emailId"])

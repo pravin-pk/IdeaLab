@@ -55,20 +55,29 @@
             </div>
             <div class="rightside">
                 <h1>Idea Lab <a href="/"><span class="material-symbols-outlined">home</span></h1></a>
-              <form action="/booking"  method="post">
+              <form action="/booking"  method="post" enctype="multipart/form-data">
                 <h2>Book slots</h2>
                 <p>Name</p>
-                <input type="text" class="inputbox" name="name" required placeholder="Seperate multiple names with ," />
+                <input type="text" class="inputbox" name="name" required placeholder="Separate multiple names with ," />
                 <p>USN</p>
                 <input type="text" class="inputbox" name="USN" id="USN" required />
+
+                <p>Organization</p>
+                <input type="text" class="inputbox" name="organization" id="organization" placeholder="Leave it blank if its for personal use">
     
-                <p>Purpose</p>
-                <select class="inputbox" name="purpose" id="purpose" required>
+                <p>Machine</p>
+                <select class="inputbox" name="machine" id="machine" required>
                   <option value="">--Select--</option>
                   <option value="laser machine">Laser machine</option>
                   <option value="3d printing machine">3d printing machine</option>
-                  <option value="lab tools">Lab Tools</option>
+                  <!-- <option value="lab tools">Lab Tools</option> -->
                 </select>
+                
+                <p>Purpose</p>
+                <input type="text" class="inputbox" name="purpose" id="purpose" placeholder="Describe Your purpose briefly" required>
+
+                <p>Upload The Design</p>
+                <input type="file" class="inputbox" name="file" required placeholder="Upload your design file">
             <div class="expcvv">
     
                 <p class="expcvv_text">Start Date and Time</p>
@@ -83,11 +92,11 @@
             <p>Email</p>
                 <input type="email" class="inputbox" name="emailId" id="emailId" required placeholder="Enter your Email Address" />
 
-            <p>Price:</p>
-            <input type="text" class="inputbox" name="price" id="price" readonly style="background: transparent; border: none; color: 'white'" />
+            <!-- <p>Price:</p>
+            <input type="text" class="inputbox" name="price" id="price" readonly style="background: transparent; border: none; color: 'white'" /> -->
             <br>
 
-                <button type="submit" class="button" data-toggle="modal" data-target="#exampleModal">Checkout</button>
+                <button type="submit" class="button" data-toggle="modal" data-target="#exampleModal">Book Slot</button>
               </form>
             </div>
           </div>
