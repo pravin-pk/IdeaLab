@@ -9,7 +9,8 @@ app = Flask(__name__)
 
 app.secret_key = 'ideaLab'
 
-app.config['UPLOAD_FOLDER'] = "E:/Web_Development/IdeaLab/files"
+# app.config['UPLOAD_FOLDER'] = "E:/Web_Development/IdeaLab/files"
+app.config['UPLOAD_FOLDER'] = "/"
 
 # stripe.api_key = 'sk_test_51Kt9XkSI3vcYtsdqzfG2gQzHfCNESxyqd7xfuVGHwYpSLK40d4xHyBoI6rJFqWyEwSAiEnUau9QlVJOVqd3JWaET008RbgAAKP'
 
@@ -198,7 +199,7 @@ def booking():
     except sqlite3.Error as e:
         print(e.args)
         cur.close()
-        return redirect("/log", 404)
+        return redirect("/", 404)
     
 @app.route("/showBookings", methods = ['GET', 'POST'])
 def showBookings():
@@ -219,11 +220,11 @@ def showBookings():
             print(e)
             return redirect(url_for("homepage"))
 
-@app.route("/payment", methods = ['GET', 'POST'])
-def payment():    
-    price = request.args.get("price")
-    print(price)
-    return render_template("payment.html", content = price)
+# @app.route("/payment", methods = ['GET', 'POST'])
+# def payment():    
+#     price = request.args.get("price")
+#     print(price)
+#     return render_template("payment.html", content = price)
 
 
 # ------------TRYING PAYMENT-----------------
