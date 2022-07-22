@@ -14,6 +14,7 @@ body {
     flex-direction: column;
     background-color: #DFDBE5;
     background-image: url("https://wallpaperaccess.com/full/3063067.png");
+    background-repeat: no-repeat;
     color:#963E7B;
 }
 
